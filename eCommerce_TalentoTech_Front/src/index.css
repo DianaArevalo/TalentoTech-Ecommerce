@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Victor+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply font-custom bg-secondary text-lg text-primary         
+}
+}
+
+@layer utilities {
+
+    .navbar{
+
+    }
+
+    .btn-primary {
+        @apply rounded-md text-white bg-tertiary
+    }
+
+    .btn-secondary {
+       @apply underline underline-offset-8
+    }
+
+    .input-primary {
+        @apply text-primary mb-2 p-1 md:mb-5 w-[193px] h-[43px] md:w-[360px] md:h-[48px] rounded-md
+    }
+
+    .selected-primary {
+        @apply text-primary mb-2 p-1 md:mb-5 mr-2 bg-fourty bg-opacity-50 w-[193px] h-[43px] md:w-[360px] md:h-[48px] rounded-md
+    }
+}
+
+/* css puro */
+
+.anyBox{
+    display: grid;    
+    align-items: center;    
+    }
+
+
+
