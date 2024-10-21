@@ -21,7 +21,7 @@
     }
 
     .btn-secondary {
-       @apply underline underline-offset-8
+       @apply underline underline-offset-8 items-center
     }
 
     .input-primary {
