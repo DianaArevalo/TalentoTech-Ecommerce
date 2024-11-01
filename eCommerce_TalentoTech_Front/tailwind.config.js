@@ -11,7 +11,7 @@ export default {
     container: {
       center: true,
     },
-    extend: {
+    extend: { 
      
       colors: {
         primary: "#000000", // colors
