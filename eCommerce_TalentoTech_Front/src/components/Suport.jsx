@@ -1,11 +1,11 @@
 import React from 'react'
 
-const Inventory = () => {
+const Suport = () => {
   return (
     <div>
-      
+      sOPORTE
     </div>
   )
 }
 
-export default Inventory
+export default Suport

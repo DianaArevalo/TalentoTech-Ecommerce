@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+
 const useRegister = () => {
     const navigate = useNavigate();
     
@@ -28,32 +29,41 @@ const useRegister = () => {
         setPasswordsMatch(formData.newPassword === formData.confirmPassword);
     };
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    if (!passwordsMatch) {
-        setMessage('Passwords do not match!');
-        return;
-    }
-
-    try {
-        // Asegúrate de que la contraseña se codifica en UTF-8 antes de usar btoa
-        const encodedPassword = btoa(unescape(encodeURIComponent(formData.newPassword))); // Codificación en Base64 de la contraseña
-        const response = await axios.post('http://localhost:8082/auth/register', {
-            name: formData.name,
-            lastName: formData.lastName,
-            userName: formData.userName,
-            email: formData.email,
-            password: encodedPassword, // Contraseña codificada
-            status: formData.status,
-            createUser: formData.createUser,
-        });
-        setMessage(response.data.message || 'Registration successful!');
-        navigate('/');
-    } catch (error) {
-        setMessage(error.response?.data?.message || 'An error occurred during registration');
-    }
-};
-
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        if (!passwordsMatch) {
+            setMessage('Passwords do not match!');
+            return;
+        }
+    
+        try {
+            // Prepara el objeto de usuario
+            const userObject = {
+                name: formData.name,
+                lastName: formData.lastName,
+                userName: formData.userName,
+                email: formData.email,
+                password: formData.newPassword, // Puedes codificar la contraseña en el backend
+                status: formData.status,
+                createUser: formData.createUser,
+            };
+    
+            // Convierte el objeto a cadena JSON y luego a Base64 usando Buffer
+            const base64String = Buffer.from(JSON.stringify(userObject)).toString('base64');
+    
+            // Envía el objeto codificado al backend
+            const response = await axios.post('http://localhost:8082/auth/register', {
+                userData: base64String, // Envía el objeto codificado
+            });
+            
+            setMessage(response.data.message || 'Registration successful!');
+            navigate('/');
+        } catch (error) {
+            setMessage(error.response?.data?.message || 'An error occurred during registration');
+        }
+    };
+    
+    
     
 
     return {
