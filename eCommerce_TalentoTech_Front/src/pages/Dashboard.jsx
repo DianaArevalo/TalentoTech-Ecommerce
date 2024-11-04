@@ -5,11 +5,10 @@ import Maps from '../components/Cards/Maps'
 
 const Dashboard = () => {
   return (
-    <div className='bg-red-300 w-full h-screen flex-row anyBox justify-center '>
-      <CardHome/>
+    <div className=' w-full h-screen flex-col anyBox justify-center '>
+      <CardHome className="mb-10"/>
      <Average/>
      <Maps/>
-
     </div>
   )
 }

@@ -4,7 +4,7 @@ import homeImage from '../../assets/Home1.jpg';
 const CardHome = () => {
   return (
     <div
-      className=" relative bg-[length:1336px_606px] bg-no-repeat lg:w-[1336px] lg:h-[606px] md:w-[652px] md:h-[644px] w-[323px] h-[537px] rounded-t-lg text-white flex items-center justify-center anyBox overflow-hidden"
+      className=" relative ml-20 bg-[length:1336px_606px] bg-no-repeat lg:w-[1336px] lg:h-[606px] md:w-[652px] md:h-[640px] w-[323px] h-[537px] rounded-t-lg text-white flex items-center justify-center anyBox overflow-hidden"
       style={{ backgroundImage: `url(${homeImage})` }}
     >
       <div className="absolute inset-0 bg-black opacity-50 pointer-events-none"></div>
@@ -14,7 +14,7 @@ const CardHome = () => {
       </div>
     
     </div>
-  );
+  ); 
 };
 
 export default CardHome;
