@@ -1,33 +1,96 @@
-
+import { useState, useEffect } from "react";
 
 const Average = () => {
+  const [count, setCount] = useState(0);
+  const [count2, setCount2] = useState(0);
+  const [count3, setCount3] = useState(0);
+  const [count4, setCount4] = useState(0);
+  
+
+  useEffect(() => {
+    // Configura el intervalo para actualizar el contador cada segundo
+    const intervalId = setInterval(() => {
+      setCount((prevCount) => {
+        if (prevCount >= 15) {
+          clearInterval(intervalId); // Detiene el contador cuando llega a 15
+          return prevCount;
+        }
+        return prevCount + 1;
+      });
+    }, 100); // Cada segundo
+
+    // Limpia el intervalo cuando el componente se desmonte
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    // Configura el intervalo para actualizar el contador cada segundo
+    const intervalId2 = setInterval(() => {
+      setCount2((prevCount) => {
+        if (prevCount >= 15345) {
+          clearInterval(intervalId2); // Detiene el contador cuando llega a 15
+          return prevCount;
+        }
+        return prevCount + 1;
+      });
+    }, 0.5); // Cada segundo
+
+    // Limpia el intervalo cuando el componente se desmonte
+    return () => clearInterval(intervalId2);
+  }, []);
+
+  useEffect(() => {
+    // Configura el intervalo para actualizar el contador cada segundo
+    const intervalId3 = setInterval(() => {
+      setCount3((prevCount) => {
+        if (prevCount >= 33) {
+          clearInterval(intervalId3); // Detiene el contador cuando llega a 15
+          return prevCount;
+        }
+        return prevCount + 1;
+      });
+    }, 100); // Cada segundo
+
+    // Limpia el intervalo cuando el componente se desmonte
+    return () => clearInterval(intervalId3);
+  }, []);
+
+  useEffect(() => {
+    // Configura el intervalo para actualizar el contador cada segundo
+    const intervalId4 = setInterval(() => {
+      setCount4((prevCount) => {
+        if (prevCount >= 5) {
+          clearInterval(intervalId4); // Detiene el contador cuando llega a 15
+          return prevCount;
+        }
+        return prevCount + 1;
+      });
+    }, 1000); // Cada segundo
+
+    // Limpia el intervalo cuando el componente se desmonte
+    return () => clearInterval(intervalId4);
+  }, []);
+
   return (
     <div className="w-full h-[768px] md:h-[480px] md:w-[768px] lg:w-[1440px] lg:h-[129px] justify-center flex flex-wrap gap-5">
-      <div className="mt-10 md:mt-0 mr-5 mb-5 bg-fourty w-[200px] h-[100px] md:w-[297px] md:h-[115px] rounded-md"> 
+      <div className="mt-5 md:mt-0 mr-5 mb-5 bg-fourty w-[200px] h-[100px] md:w-[297px] md:h-[115px] rounded-md font-black">
         <h1 className="ml-5 mt-5">Current MR...</h1>
-        <p className="text-4xl">1345</p>
+        <p className="text-4xl ml-5">{count}<span>K</span></p>
       </div>
       <div className="mr-5 mb-5 bg-white w-[200px] h-[100px] md:w-[297px] md:h-[115px] rounded-md font-black">
-        <h1 className="ml-5 mt-5">Current MR...</h1>
-        <p className="text-4xl ml-20">Contador</p>
-
+        <h1 className="ml-5 mt-5">Clients...</h1>
+        <p className="text-4xl ml-5"><span>$</span>{count2}</p>
       </div>
-      <div className="mr-5 mb-5 bg-fourty w-[200px] h-[100px] md:w-[297px] md:h-[115px] rounded-md"> 
-        <h1 className="ml-5 mt-5">Current MR...</h1>
-        <p className="text-4xl">1345</p>
-
+      <div className="mr-5 mb-5 bg-fourty w-[200px] h-[100px] md:w-[297px] md:h-[115px] rounded-md font-black">
+        <h1 className="ml-5 mt-5">Average...</h1>
+        <p className="text-4xl ml-5">{count3}<span>%</span></p>
       </div>
       <div className="mr-5 mb-5 bg-white w-[200px] h-[100px] md:w-[297px] md:h-[115px] rounded-md font-black">
-        <h1 className="ml-5 mt-5">Current MR...</h1>
-        <p className="text-4xl">1345</p>
-
+        <h1 className="ml-5 mt-5">Second Average...</h1>
+        <p className="text-4xl ml-5">{count4}<span>%</span></p>
       </div>
-      
     </div>
-  )
-}
+  );
+};
 
-export default Average
-
-// 
-// 
+export default Average;

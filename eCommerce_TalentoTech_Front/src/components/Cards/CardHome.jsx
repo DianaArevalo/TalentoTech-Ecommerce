@@ -9,7 +9,7 @@ const CardHome = () => {
     >
       <div className="absolute inset-0 bg-black opacity-50 pointer-events-none"></div>
       <div className='relative z-10 p-4'>
-      <h1 className=' text-4xl md:text-7xl mb-5'><span className='font-extrabold'>Embark</span> on Your Next Adventure...</h1>
+      <h1 className=' text-4xl md:text-7xl mb-5'><span className='font-extrabold italic'>Embark</span> on Your Next Adventure...</h1>
       <p className='text-sm md:text-lg'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus minus sapiente, cumque fugiat consectetur quia facilis distinctio, libero officiis, incidunt earum. Labore quasi quibusdam fugit tenetur laborum neque dolore nulla.</p>
       </div>
     

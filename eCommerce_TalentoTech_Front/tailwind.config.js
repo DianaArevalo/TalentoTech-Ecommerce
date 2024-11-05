@@ -8,6 +8,9 @@ export default {
     fontFamily: {
       custom: ["Victor Mono", "monospace"], // Type
     },
+    fontStyle:{
+      custom: "italic",
+    },
     container: {
       center: true,
     },
