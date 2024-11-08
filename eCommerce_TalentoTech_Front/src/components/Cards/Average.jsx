@@ -33,7 +33,7 @@ const Average = () => {
         }
         return prevCount + 1;
       });
-    }, 0.5); // Cada segundo
+    }, 0.005); // Cada segundo
 
     // Limpia el intervalo cuando el componente se desmonte
     return () => clearInterval(intervalId2);
