@@ -11,7 +11,7 @@ const Products = () => {
 
 
       <div className='w-[330px] h-[619px] lg:w-[483px] lg:h-[684px] justify-start place-content-start mr-5'>
-        <div className='bg-fourty w-[330px] h-[619px] lg:w-[425px] lg:h-[621px]' style={{backgroundImage: `url(${bgPromo})`}}
+        <div className='bg-fourty w-[330px] h-[619px] lg:w-[425px] lg:h-[621px] md:ml-5 lg:ml-10' style={{backgroundImage: `url(${bgPromo})`}}
         >
           
           <h1 className='text-5xl md:text-7xl p-4 mb-20'>Esta es la promo numero uno de <span className='font-extrabold italic'>hoy</span>.</h1> 
@@ -72,5 +72,3 @@ const Products = () => {
 }
 
 export default Products
-
-//
