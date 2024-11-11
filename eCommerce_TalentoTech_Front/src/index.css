@@ -25,6 +25,10 @@
        @apply underline underline-offset-8 items-center
     }
 
+    .btn-tertiary {
+        @apply rounded-md bg-secondary text-black w-[100px] h-[26px] justify-center place-content-center p-1
+    }
+
     .input-primary {
         @apply text-primary mb-2 p-1 md:mb-5 w-[193px] h-[43px] md:w-[360px] md:h-[48px] rounded-md
     }
