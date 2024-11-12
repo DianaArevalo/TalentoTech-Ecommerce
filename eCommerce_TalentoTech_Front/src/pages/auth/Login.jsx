@@ -19,7 +19,7 @@ const handleSubmit = (e) => {
      className='container md:w-[518px] md:h-[684px] w-[306px] h-[464px] bg-fourty shadow-2xl rounded-sm text-sm md:text-xl anyBox'
      >
       <div className='p-5 mt-0'>
-        <button className='btn-secondary mb-2'>hola...</button>
+        <button className='btn-secondary mb-2'>Compra Aqui...</button>
       </div>
       <div className='anyBox flex-row w-[193px] h-[252px] mx-10 md:ml-18 p-5'> 
       {/* <input type="text" placeholder='rol' className='selected-primary'/>      */}

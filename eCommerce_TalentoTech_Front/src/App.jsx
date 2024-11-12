@@ -6,7 +6,8 @@ import Register from "./pages/auth/Register"
 import Dashboard from "./pages/Dashboard"
 import Orders from "./pages/cart/Orders"
 import Products from "./pages/services/Products"
-import Contact from "./pages/services/Contact"
+import Contact from "./components/Contact"
+import ProductDetails from "./pages/services/ProductDetails"
 
 function App() {
   
@@ -20,6 +21,7 @@ function App() {
          <Route index path="/orders" element={<Orders />} />
          <Route index path="/products" element={<Products/>} />
          <Route index path="/contactForm" element={<Contact/>} />
+         <Route index path="/productDetails" element={<ProductDetails/>} />
          
 
       </Route>

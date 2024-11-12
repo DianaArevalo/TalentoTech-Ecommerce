@@ -2,7 +2,6 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-
 const useRegister = () => {
     const navigate = useNavigate();
     
@@ -14,7 +13,7 @@ const useRegister = () => {
         status: 1,
         newPassword: '',
         confirmPassword: '',
-        createUser: 'Carolina Arevalo', // Agregar createUser aquí
+        createUser: 'REGISTER',
     });
     
     const [message, setMessage] = useState('');
@@ -37,23 +36,20 @@ const useRegister = () => {
         }
     
         try {
-            // Prepara el objeto de usuario
             const userObject = {
                 name: formData.name,
                 lastName: formData.lastName,
                 userName: formData.userName,
                 email: formData.email,
-                password: formData.newPassword, // Puedes codificar la contraseña en el backend
+                password: formData.newPassword,
                 status: formData.status,
                 createUser: formData.createUser,
-            };
-    
-            // Convierte el objeto a cadena JSON y luego a Base64 usando Buffer
-            const base64String = Buffer.from(JSON.stringify(userObject)).toString('base64');
-    
-            // Envía el objeto codificado al backend
-            const response = await axios.post('http://localhost:8082/auth/register', {
-                userData: base64String, // Envía el objeto codificado
+            };    
+
+            const response = await axios.post('http://localhost:8082/auth/register', userObject, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             });
             
             setMessage(response.data.message || 'Registration successful!');
@@ -63,9 +59,6 @@ const useRegister = () => {
         }
     };
     
-    
-    
-
     return {
         formData,
         message,
