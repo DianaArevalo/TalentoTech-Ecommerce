@@ -8,6 +8,7 @@ import Orders from "./pages/cart/Orders"
 import Products from "./pages/services/Products"
 import Contact from "./components/Contact"
 import ProductDetails from "./pages/services/ProductDetails"
+import ChangePassword from "./pages/auth/ChangePassword"
 
 function App() {
   
@@ -18,6 +19,8 @@ function App() {
          {/* colocar dashboard como principal  */}
          <Route index path="/register" element={<Register />} />
          <Route index path="/login" element={<Login />} />
+         <Route index path="/reset-Password" element={<ChangePassword />} />
+         <Route index path="/change-password" element={<ChangePassword />} />
          <Route index path="/orders" element={<Orders />} />
          <Route index path="/products" element={<Products/>} />
          <Route index path="/contactForm" element={<Contact/>} />

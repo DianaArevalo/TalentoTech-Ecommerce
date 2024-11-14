@@ -1,4 +1,3 @@
-
 import homeImage from '../../assets/Home1.jpg';
 
 const CardHome = () => {

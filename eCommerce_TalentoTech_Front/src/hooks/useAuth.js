@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +8,15 @@ const useAuth = () => {
         password: ''
     });
     const [message, setMessage] = useState('');
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            setIsAuthenticated(true);
+        }
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -18,12 +26,14 @@ const useAuth = () => {
     const handleAuth = async (mode) => {
         try {
             let response;
-            if (mode === '/login') {
+            if (mode === 'login') {
                 response = await axios.post('http://localhost:8082/auth/login', {
                     email: formData.email,
                     password: formData.password,
                 });
-                navigate('/dashboard');
+                localStorage.setItem('authToken', response.data.token);
+                setIsAuthenticated(true);
+                navigate('/products');
             } else if (mode === 'register') {
                 response = await axios.post('http://localhost:8082/auth/register', {
                     ...formData,
@@ -32,15 +42,23 @@ const useAuth = () => {
             }
             setMessage(response.data.message || 'Success!');
         } catch (error) {
-            setMessage(error.response?.data?.message || 'An error occurred');
+            setMessage(error.response?.data?.message || 'Invalid Username or Password');
         }
+    };
+
+    const logout = () => {
+        localStorage.removeItem('authToken');
+        setIsAuthenticated(false);
+        navigate('/login');
     };
 
     return [
         formData,
         message,
         handleInputChange,
-        handleAuth
+        handleAuth,
+        isAuthenticated,
+        logout,
     ];
 };
 
