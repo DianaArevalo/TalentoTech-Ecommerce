@@ -3,8 +3,25 @@ import bgPromo from '../../assets/bgPromo.svg'
 import img1 from '../../assets/product-Prueba1.jpg'
 import img2 from '../../assets/product-Prueba2.jpg'
 import img3 from '../../assets/product-Prueba3.jpg'
+import useInventory from '../../hooks/useInventory.js';
+import useCart from '../../hooks/useCart.js';
+import { useParams } from 'react-router-dom';
 
 const ProductDetails = () => {
+  const { id } = useParams();
+  const { services, error } = useInventory();
+  const { addToCart } = useCart();
+
+  const product = services.find((service) => service.id === parseInt(id, 10));
+
+    // Función para manejar la adición al carrito
+    const handleAddToCart = (product) => {
+      addToCart(product);
+    };
+
+    if (error) return <p>{error}</p>;
+    if (!product) return <p>Producto no encontrado</p>;
+
   return (
     <div className='flex-wrap md:flex-row lg:flex-wrap anyBox justify-center md:justify-start md:place-content-start hidden md:flex'>
 
@@ -19,19 +36,28 @@ const ProductDetails = () => {
       </div>
       
     </div>
-    <div className='w-[330px] md:w-[530px] lg:w-[957px] h-full flex flex-wrap justify-center place-content-start p-1'>
-    <div className='bg-fourty/50 w-[330px] h-[800px] md:w-[490px] md:h-[px] lg:w-[905px] lg:h-[413px] flex flex-wrap justify-center place-content-start'>     
+    <div className='w-[330px] md:w-[530px] lg:w-[957px] h-full flex flex-wrap justify-center place-content-start p-1'>      
+     
+    <div key={product.id} className='bg-fourty/50 w-[330px] h-[800px] md:w-[490px] md:h-[px] lg:w-[905px] lg:h-[413px] flex flex-wrap justify-center place-content-start'>     
       <div className='w-[330px] h-[475px] p-5'>
-      <div className='mb-5 font-extrabold'>Title description product one...</div>
+      <div className='mb-5 font-extrabold'>{product.name}</div>
       <p className='text-sm mb-5'>Lorem ipsum dolor,vitae! Facilis officiis animi ut odit! Deserunt officiis excepturi sequi quaerat in nesciunt quae non illum aspernatur.</p>
+      <p className="ml-2 p-1 font-semibold">
+                    Precio: ${product.salePrice ? product.salePrice : 'No disponible'}
+                  </p>
       <div className='flex flex-wrap justify-between place-content-start p-5'>
-        <Link to="/products" className='btn-secondary text-sm mb-5'>more products...</Link>
-        <Link to="/orders" className='btn-primary p-2 text-sm'>Add to cart ...</Link>
+      <Link className='btn-secondary p-2 mb-5'>Remove ...</Link>
+     <button className="btn btn-primary p-2 mb-5"
+            onClick={() => handleAddToCart(product)} // Llamar a la función de agregar al carrito
+                  >
+                    Agregar al carrito
+                  </button>
       </div>
       </div>
-      <img src={img1} alt="" height="348px" width="330px" />
+      <img src={product.imageUrl} alt="" height="348px" width="330px" />
       
     </div>
+ 
 
     <div className='anyBox'>
     <div className='bg-white w-[330px] h-[100px] md:w-[490px] md:h-[79px] lg:w-[898px] lg:h-[79px] justify-center place-content-center anyBox'>

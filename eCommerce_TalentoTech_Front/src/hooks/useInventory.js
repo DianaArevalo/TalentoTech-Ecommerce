@@ -1,32 +1,42 @@
-import { useState } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 const useInventory = () => {
-    const [products, setProducts] = useState([]);
-    const [productDetails, setProductDetails] = useState(null);
-    const [message, setMessage] = useState('');
+  const [services, setServices] = useState([]);
+  const [error, setError] = useState(null);
 
-    // Método para listar todos los productos
-    const listAllProducts = async () => {
-        try {
-            const token = localStorage.getItem('token'); // O el método que uses para guardar el token
-            const response = await axios.get('http://localhost:8082/inventory/list/all', {
-                headers: {
-                    Authorization: `Bearer ${token}`, // Ajusta el tipo de token según necesites
-                },
-            });
-            setProducts(response.data);
-        } catch (error) {
-            setMessage(error.response?.data?.message || 'Error al mostrar todos los productos');
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const payload = { page: 1 };
+        const base64Payload = btoa(JSON.stringify(payload));
+
+        const response = await fetch('https://backend-guardianshop.onrender.com/services/list/all', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: base64Payload,
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
+
+        const base64Data = await response.text();
+        const jsonString = atob(base64Data);
+        const data = JSON.parse(jsonString);
+
+        setServices(data.data.content);
+      } catch (error) {
+        console.error('Error fetching services:', error);
+        setError('Error fetching services');
+      }
     };
 
-    return {
-        products,
-        productDetails,
-        message,
-        listAllProducts,
-    };
+    fetchServices();
+  }, []);
+
+  return { services, error };
 };
 
 export default useInventory;

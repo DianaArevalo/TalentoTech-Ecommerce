@@ -18,7 +18,7 @@ const useAuth = () => {
     const handleAuth = async (mode) => {
         try {
             let response;
-            if (mode === 'login') {
+            if (mode === '/login') {
                 response = await axios.post('http://localhost:8082/auth/login', {
                     email: formData.email,
                     password: formData.password,
