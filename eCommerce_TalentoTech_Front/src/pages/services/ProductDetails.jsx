@@ -63,50 +63,37 @@ const ProductDetails = () => {
     <div className='bg-white w-[330px] h-[100px] md:w-[490px] md:h-[79px] lg:w-[898px] lg:h-[79px] justify-center place-content-center anyBox'>
       <h1 className='bg-fourty w-[292px] h-[50px] md:w-[482px] md:h-[45px] rounded-md justify-center place-content-center anyBox'>Adquirir mas productos...</h1>
     </div>
+   
+
+   
     <div className='w-[330px] md:w-[530px] lg:w-[957px] h-full flex flex-wrap justify-center place-content-start p-1'>
-        <div className='bg-fourty/50 w-[249px] h-[351px] m-1'>
-          <img src={img1} alt="" width="249px" height="250px" />
-          <h1 className='font-bold ml-2'>Title description product one...</h1>
-          <div className='justify-between text-sm flex space-x-1 p-1'>
-          <Link className='btn-primary p-1' to="/productDetails">Details...</Link>
-            <Link className='btn-secondary p-1'>Remove ...</Link>
-          </div>
-         
+    {error && <p>{error}</p>}
 
-        </div>
-        <div className='bg-fourty/50  w-[249px] h-[351px] m-1'>
-        <img src={img2} alt="" width="249px" height="250px" />
-          <h1 className='font-bold ml-2'>Title description product two...</h1>
-          <div className='justify-between text-sm flex space-x-1 p-1'>
-            <Link className='btn-primary p-1' to="/productDetails">Details...</Link>
-            <Link className='btn-secondary p-1'>Remove ...</Link>
-          </div>
 
-        </div>
-        <div className='bg-fourty/50  w-[249px] h-[351px] m-1'>
-        <img src={img3} alt="" width="249px" height="250px" />
-          <h1 className='font-bold ml-2'>Title description product three...</h1>
-          <div className='justify-between text-sm flex space-x-1 p-1'>
-          <Link className='btn-primary p-1' to="/productDetails">Details...</Link>
-            <Link className='btn-secondary p-1'>Remove ...</Link>
-          </div>
-        </div>
-        <div className='bg-fourty/50  w-[249px] h-[351px] m-1'>
-        <img src={img3} alt="" width="249px" height="250px" />
-          <h1 className='font-bold ml-2'>Title description product three...</h1>
-          <div className='justify-between text-sm flex space-x-1 p-1'>
-          <Link className='btn-primary p-1' to="/productDetails">Details...</Link>
-            <Link className='btn-secondary p-1'>Remove ...</Link>
-          </div>
-        </div>
-        <div className='bg-fourty/50  w-[249px] h-[351px] m-1'>
-        <img src={img3} alt="" width="249px" height="250px" />
-          <h1 className='font-bold ml-2'>Title description product three...</h1>
-          <div className='justify-between text-sm flex space-x-1 p-1'>
-          <Link className='btn-primary p-1' to="/productDetails">Details...</Link>
-            <Link className='btn-secondary p-1'>Remove ...</Link>
-          </div>
-        </div>
+    {services.map((service) => (
+       <div key={service.id} className='bg-fourty/50 w-[249px] h-[550px] m-1'>
+       <img src={service.imageUrl} alt="" width="249px" height="250px" />
+       <h1 className='font-bold ml-2'>{service.name}</h1>
+       <p className="ml-2 p-1 font-semibold">
+                    Precio: ${service.salePrice ? service.salePrice : 'No disponible'}
+      </p>
+       <div className='text-sm flex flex-wrap space-x-1 p-1'>
+       <Link className='btn-primary p-2 mb-5' to={`/productDetails/${service.id}`}>Details...</Link>
+         <Link className='btn-secondary p-2 mb-5'>Remove ...</Link>
+         <button
+                    className="btn btn-primary p-2 mb-5"
+                    onClick={() => handleAddToCart(service)} // Llamar a la función de agregar al carrito
+                  >
+                    Agregar al carrito
+                  </button>
+       </div>
+      
+
+     </div>
+
+    ))}
+       
+    
 
       </div>
     </div>
