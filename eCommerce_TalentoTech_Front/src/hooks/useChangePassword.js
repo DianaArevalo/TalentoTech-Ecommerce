@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Global } from '../helpers/Global';
 
 const useChangePassword = () => {
     const navigate = useNavigate(); // Para la navegación
@@ -24,7 +25,7 @@ const useChangePassword = () => {
 
     const sendResetEmail = async () => {
         try {
-            const response = await axios.post('http://localhost:8082/auth/reset-password', {
+            const response = await axios.post(Global.url + "auth/reset-password", {
                 email: formData.email,
             });
             setMessage(response.data.message || 'Password reset link sent to your email!');
@@ -39,7 +40,7 @@ const useChangePassword = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8082/auth/change-password', {
+            const response = await axios.post(Global.url + "auth/change-password", {
                 newPassword: formData.newPassword,
                 token: formData.token,
             });

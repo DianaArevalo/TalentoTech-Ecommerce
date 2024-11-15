@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Global } from '../helpers/Global';
 
 const useRegister = () => {
     const navigate = useNavigate();
@@ -46,7 +47,7 @@ const useRegister = () => {
                 createUser: formData.createUser,
             };    
 
-            const response = await axios.post('http://localhost:8082/auth/register', userObject, {
+            const response = await axios.post(Global.url + "auth/register", userObject, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
