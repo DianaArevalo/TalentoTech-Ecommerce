@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Global } from '../helpers/Global';
 
 const useInventory = () => {
   const [services, setServices] = useState([]);
@@ -10,7 +11,7 @@ const useInventory = () => {
         const payload = { page: 1 };
         const base64Payload = btoa(JSON.stringify(payload));
 
-        const response = await fetch('https://backend-guardianshop.onrender.com/services/list/all', {
+        const response = await fetch(Global.url + "services/list/all", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

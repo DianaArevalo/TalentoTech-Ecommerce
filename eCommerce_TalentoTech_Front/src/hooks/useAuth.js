@@ -32,7 +32,8 @@ const useAuth = () => {
                     email: formData.email,
                     password: formData.password,
                 });
-                localStorage.setItem('authToken', response.data.token);
+                localStorage.setItem('authToken', response.data.jwt);
+                console.log(response)
                 setIsAuthenticated(true);
                 navigate('/products');
             } else if (mode === 'register') {

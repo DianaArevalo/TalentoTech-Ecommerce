@@ -1,8 +1,5 @@
 import { Link } from 'react-router-dom'
 import bgPromo from '../../assets/bgPromo.svg'
-import img1 from '../../assets/product-Prueba1.jpg'
-import img2 from '../../assets/product-Prueba2.jpg'
-import img3 from '../../assets/product-Prueba3.jpg'
 import useInventory from '../../hooks/useInventory.js';
 import useCart from '../../hooks/useCart.js';
 import { useParams } from 'react-router-dom';
