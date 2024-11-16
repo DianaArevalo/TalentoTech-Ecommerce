@@ -8,6 +8,12 @@ import Orders from "./pages/cart/Orders"
 import Products from "./pages/services/Products"
 import Contact from "./components/Contact"
 import ProductDetails from "./pages/services/ProductDetails"
+import ChangePassword from "./pages/auth/ChangePassword"
+
+//context
+
+import  { AuthProvider } from "./Context/authContext"
+import { CartProvider } from "./Context/cartContext"
 
 function App() {
   
@@ -22,6 +28,8 @@ function App() {
          <Route index path="/products" element={<Products/>} />
          <Route index path="/contactForm" element={<Contact/>} />
          <Route index path="/productDetails/:id" element={<ProductDetails/>} />
+         <Route index path="/reset-Password" element={<ChangePassword />} />
+         <Route index path="/change-password" element={<ChangePassword />} />
          
 
       </Route>
@@ -29,9 +37,14 @@ function App() {
   )
 
   return (
-    <div className="App h-screen">
+    <AuthProvider>
+      <CartProvider>
+       <div className="App h-screen">
         <RouterProvider router={router} />
-    </div>
+       </div>
+      </CartProvider>      
+    </AuthProvider>
+    
   )
 
  

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+
 const useRegister = () => {
     const navigate = useNavigate();
     
@@ -18,6 +19,7 @@ const useRegister = () => {
     
     const [message, setMessage] = useState('');
     const [passwordsMatch, setPasswordsMatch] = useState(true);
+    
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -53,7 +55,7 @@ const useRegister = () => {
             });
             
             setMessage(response.data.message || 'Registration successful!');
-            navigate('/');
+            navigate('/login');
         } catch (error) {
             setMessage(error.response?.data?.message || 'An error occurred during registration');
         }
