@@ -1,4 +1,3 @@
-import React from 'react'
 import img1 from '../../assets/product-Prueba1.jpg'
 import { Link } from 'react-router-dom'
 
@@ -28,7 +27,7 @@ const Orders = () => {
                     <div className='text-sm flex flex-wrap space-x-1 p-1'>
                           <Link className='btn-primary p-2 mb-5' >Details...
                           </Link>
-                           <Link className='btn-secondary p-2 mb-5'>Remove ...</Link>
+                           {/* <Link className='btn-secondary p-2 mb-5'>Remove ...</Link> */}
                            
                     </div>
            </div>     

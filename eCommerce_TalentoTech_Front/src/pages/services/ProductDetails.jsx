@@ -43,7 +43,7 @@ const ProductDetails = () => {
                     Precio: ${product.salePrice ? product.salePrice : 'No disponible'}
                   </p>
       <div className='flex flex-wrap justify-between place-content-start p-5'>
-      <Link className='btn-secondary p-2 mb-5'>Remove ...</Link>
+      {/* <Link className='btn-secondary p-2 mb-5'>Remove ...</Link> */}
      <button className="btn btn-primary p-2 mb-5"
             onClick={() => handleAddToCart(product)} // Llamar a la función de agregar al carrito
                   >
@@ -76,7 +76,7 @@ const ProductDetails = () => {
       </p>
        <div className='text-sm flex flex-wrap space-x-1 p-1'>
        <Link className='btn-primary p-2 mb-5' to={`/productDetails/${service.id}`}>Details...</Link>
-         <Link className='btn-secondary p-2 mb-5'>Remove ...</Link>
+         {/* <Link className='btn-secondary p-2 mb-5'>Remove ...</Link> */}
          <button
                     className="btn btn-primary p-2 mb-5"
                     onClick={() => handleAddToCart(service)} // Llamar a la función de agregar al carrito

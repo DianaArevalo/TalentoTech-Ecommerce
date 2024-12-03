@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // Importación correcta
+import {jwtDecode} from "jwt-decode"; // Importación corregida
 import { Global } from "../helpers/Global";
 
 const useCart = () => {
@@ -29,10 +29,57 @@ const useCart = () => {
     }
   };
 
-  const addToCart = async (product) => {
-    console.log(product, "id");
+  const checkIfUserHasCart = async (userId) => {
     const token = localStorage.getItem("authToken");
-    console.log("Token:", token);
+    if (!token || !isTokenValid(token)) {
+      navigate("/login");
+      console.error("Token no disponible o inválido");
+      return 0;
+    }
+  
+    try {
+      const cartCheckPayload = { userId };
+      const base64Payload = btoa(JSON.stringify(cartCheckPayload));
+  
+      const response = await axios.post(
+        Global.url + "carts/findCartByUser",
+        base64Payload,
+        {
+          headers: {
+            "Content-Type": "text/plain",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      // Paso 1: Decodificar la respuesta Base64
+      const base64Response = response.data;
+      const decodedString = atob(base64Response); // Decodificamos la respuesta Base64
+  
+      // Paso 2: Parseamos el JSON decodificado
+      const parsedResponse = JSON.parse(decodedString);
+      console.log("Parsed Response from Backend:", parsedResponse);
+  
+      // Paso 3: Extraemos y parseamos el campo 'data' (ya es un JSON válido)
+      const innerData = parsedResponse?.data;
+      const innerParsedData = JSON.parse(innerData); // Parseamos el contenido del campo 'data'
+      console.log("Decoded Inner Data:", innerParsedData);
+  
+      // Extraer el cartId del JSON decodificado
+      const cartId = innerParsedData.cartId || 0;
+      console.log("Cart ID obtenido:", cartId);
+      return cartId;
+  
+    } catch (error) {
+      console.error("Error en checkIfUserHasCart:", error);
+      setError("Error al verificar el carrito");
+      return 0;
+    }
+  };
+  
+
+  const addToCart = async (product) => {
+    const token = localStorage.getItem("authToken");
 
     if (!token || !isTokenValid(token)) {
       navigate("/login");
@@ -42,15 +89,9 @@ const useCart = () => {
 
     try {
       const decodedToken = jwtDecode(token);
-      console.log(decodedToken);
-
       const userId = parseInt(decodedToken.sub);
-      console.log("userId", typeof userId);
-
       const usernamePayload = { id: userId };
       const base64UsernamePayload = btoa(JSON.stringify(usernamePayload));
-
-      console.log(base64UsernamePayload, "user");
 
       const userNameResponse = await axios.post(
         Global.url + "users/list/id",
@@ -63,50 +104,46 @@ const useCart = () => {
         }
       );
 
-      console.log("Response from server:", userNameResponse.data);
+      const userNameData = JSON.parse(atob(userNameResponse.data));
+      const { userName } = userNameData.data;
 
-      // Verifica que el dato a decodificar sea válido
-      try {
-        const userNameData = atob(userNameResponse.data);
-        console.log(userNameData, 'objeto')
-        const jsonUserName  = JSON.parse(userNameData);
-        const {userName} = jsonUserName.data
-        console.log(userName, 'userName')
+      // Verificar si el usuario ya tiene un carrito existente
+      const cartId = await checkIfUserHasCart(userId);
+      console.log("Response from cart check:", cartId);
 
-        const cartPayload = {
-          cartId: 1,
-          inventoryId: product.id,
-          quantity: 1,
-          userId,
-          createUser: userName,
-        };
+      const cartPayload = {
+        cartId, // Usar el ID del carrito existente o 0
+        inventoryId: product.id,
+        quantity: 1,
+        userId,
+        createUser: userName,
+      };
+      console.log("Response from cart check:", cartPayload.cartId);
+      console.log("Response from cart check:", cartPayload.inventoryId);
+      console.log("Response from cart check:", cartPayload);
+      
 
-        const base64CartPayload = btoa(JSON.stringify(cartPayload));
-        console.log(base64CartPayload, "base64");
+      const base64CartPayload = btoa(JSON.stringify(cartPayload));
 
-        const response = await axios.post(
-          Global.url + "carts/addToCart",
-          base64CartPayload,
-          {
-            headers: {
-              "Content-Type": "text/plain",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const base64Data = response.data;
-        if (base64Data && base64Data.length % 4 === 0) {
-          const jsonString = atob(base64Data);
-          const data = JSON.parse(jsonString);
-          setCartItems(data.cartItems);
-        } else {
-          console.error("Invalid Base64 string:", base64Data);
-          setError("Invalid data format from server");
+      const response = await axios.post(
+        Global.url + "carts/addToCart",
+        base64CartPayload,
+        {
+          headers: {
+            "Content-Type": "text/plain",
+            Authorization: `Bearer ${token}`,
+          },
         }
-      } catch (decodeError) {
-        console.error("Error decoding Base64:", decodeError);
-        setError("Error decoding server response");
+      );
+
+      const base64Data = response.data;
+      if (base64Data && base64Data.length % 4 === 0) {
+        const jsonString = atob(base64Data);
+        const data = JSON.parse(jsonString);
+        setCartItems(data.cartItems);
+      } else {
+        console.error("Invalid Base64 string:", base64Data);
+        setError("Invalid data format from server");
       }
     } catch (error) {
       console.error("Error en addToCart:", error);

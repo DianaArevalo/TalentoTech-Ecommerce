@@ -48,7 +48,7 @@ const Products = () => {
                     <div className='text-sm flex flex-wrap space-x-1 p-1'>
                           <Link className='btn-primary p-2 mb-5' to={`/productDetails/${service.id}`}>Details...
                           </Link>
-                           <Link className='btn-secondary p-2 mb-5'>Remove ...</Link>
+                           {/* <Link className='btn-secondary p-2 mb-5'>Remove ...</Link> */}
                            <button
                     className="btn btn-primary p-2 mb-5"
                     onClick={() => handleAddToCart(service)} // Llamar a la función de agregar al carrito
