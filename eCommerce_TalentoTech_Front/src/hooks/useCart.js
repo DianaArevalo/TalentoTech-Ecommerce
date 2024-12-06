@@ -52,22 +52,13 @@ const useCart = () => {
         }
       );
   
-      // Paso 1: Decodificar la respuesta Base64
       const base64Response = response.data;
-      const decodedString = atob(base64Response); // Decodificamos la respuesta Base64
-  
-      // Paso 2: Parseamos el JSON decodificado
+      const decodedString = atob(base64Response);
       const parsedResponse = JSON.parse(decodedString);
-      console.log("Parsed Response from Backend:", parsedResponse);
-  
-      // Paso 3: Extraemos y parseamos el campo 'data' (ya es un JSON válido)
       const innerData = parsedResponse?.data;
-      const innerParsedData = JSON.parse(innerData); // Parseamos el contenido del campo 'data'
-      console.log("Decoded Inner Data:", innerParsedData);
-  
-      // Extraer el cartId del JSON decodificado
+      const innerParsedData = JSON.parse(innerData); 
+
       const cartId = innerParsedData.cartId || 0;
-      console.log("Cart ID obtenido:", cartId);
       return cartId;
   
     } catch (error) {
@@ -106,21 +97,15 @@ const useCart = () => {
 
       const userNameData = JSON.parse(atob(userNameResponse.data));
       const { userName } = userNameData.data;
-
-      // Verificar si el usuario ya tiene un carrito existente
       const cartId = await checkIfUserHasCart(userId);
-      console.log("Response from cart check:", cartId);
 
       const cartPayload = {
-        cartId, // Usar el ID del carrito existente o 0
-        inventoryId: product.id,
+        cartId,
+        inventoryId: product.inventoryId,
         quantity: 1,
         userId,
         createUser: userName,
       };
-      console.log("Response from cart check:", cartPayload.cartId);
-      console.log("Response from cart check:", cartPayload.inventoryId);
-      console.log("Response from cart check:", cartPayload);
       
 
       const base64CartPayload = btoa(JSON.stringify(cartPayload));

@@ -33,7 +33,6 @@ const useAuth = () => {
                     password: formData.password,
                 });
                 localStorage.setItem('authToken', response.data.jwt);
-                console.log(response)
                 setIsAuthenticated(true);
                 navigate('/products');
             } else if (mode === 'register') {
