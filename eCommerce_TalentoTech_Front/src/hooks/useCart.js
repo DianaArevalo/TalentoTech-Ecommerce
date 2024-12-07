@@ -225,22 +225,80 @@ const useCart = () => {
           return { success: true, items }; 
         }
         // return dataString;
-      } else {
-        console.error("Carrito vacío, por favor agrega productos.");
-        setError("Carrito vacío, por favor agrega productos.");
-      }
+      } 
     } catch (error) {
       console.error("Error en validateCart:", error);
       setError("Error al validar el carrito");
     }
   };
 
+  const updateItemQuantity = async (item) => {
+    const token = localStorage.getItem("authToken");
+  
+    if (!token || !isTokenValid(token)) {
+      navigate("/login");
+      console.error("Token no disponible o inválido");
+      return;
+    }
+  
+    try {
+      const orderItemDto = {
+        id: item.id,
+        name: item.name,
+        cartId: item.cartId,
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.price,
+        updateUser: item.userName,
+      };
+  
+      const base64OrderItemDto = btoa(JSON.stringify(orderItemDto));
+  
+      const response = await axios.post(
+        Global.url + "order-items/updateRecord",
+        base64OrderItemDto,
+        {
+          headers: {
+            "Content-Type": "text/plain",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      const base64Data = response.data;
+      if (base64Data && base64Data.length % 4 === 0) {
+        const jsonString = atob(base64Data);
+        const updatedItem = JSON.parse(jsonString);
+  
+        // Actualiza el estado de cartItems asegurando que provoque una re-renderización
+        setCartItems((prevItems) => {
+          const updatedItems = prevItems.map((cartItem) =>
+            cartItem.id === updatedItem.id
+              ? { ...cartItem, quantity: updatedItem.quantity }
+              : cartItem
+          );
+  
+          // Si la cantidad es 0, eliminamos el ítem del carrito
+          return updatedItems.filter((cartItem) => cartItem.quantity > 0);
+        });
+      } else {
+        console.error("Invalid Base64 string:", base64Data);
+        setError("Invalid data format from server");
+      }
+    } catch (error) {
+      console.error("Error updating item quantity:", error);
+      setError("Error al actualizar la cantidad del ítem");
+    }
+  };
+  
+
   return {
     cartItems,
     addToCart,
     validateCart,
+    updateItemQuantity,
     error,
-  };
+  };  
 };
 
 export default useCart;

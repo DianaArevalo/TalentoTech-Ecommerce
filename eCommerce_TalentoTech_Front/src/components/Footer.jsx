@@ -23,7 +23,7 @@ const Footer = () => {
           <ol>
             <li className='mb-2'><Link to="https://api.whatsapp.com/send/?phone=%2B573205159915&text&type=phone_number&app_absent=0" className='underline' >+573205159915</Link></li>
             <li className='mb-2'>Cr 24 # 1 - 135 Sur - Madrid/Cundinamarca</li>
-            <li className='mb-2'><Link to="https://github.com/DianaArevalo/TalentoTech-Ecommerce" className='underline'>www.GuardianShop.com</Link></li>
+            <li className='mb-2'><Link to="https://github.com/PEDRAZA2645/GuardianShop_Front" className='underline'>www.GuardianShop.com</Link></li>
           </ol>
         </div>
       </div>
