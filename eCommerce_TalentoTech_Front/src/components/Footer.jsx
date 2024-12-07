@@ -21,9 +21,9 @@ const Footer = () => {
         </div>
         <div className='justify-center place-content-center'>
           <ol>
-            <li className='mb-2'><Link to="https://chat.whatsapp.com/HlWua8NmQtRE8IZpoTB6sp" className='underline' >+573202896722</Link></li>
-            <li className='mb-2'>Cl 50c # 20-22</li>
-            <li className='mb-2'><Link to="https://github.com/DianaArevalo/TalentoTech-Ecommerce" className='underline'>www.GuardianS.com</Link></li>
+            <li className='mb-2'><Link to="https://api.whatsapp.com/send/?phone=%2B573205159915&text&type=phone_number&app_absent=0" className='underline' >+573205159915</Link></li>
+            <li className='mb-2'>Cr 24 # 1 - 135 Sur - Madrid/Cundinamarca</li>
+            <li className='mb-2'><Link to="https://github.com/DianaArevalo/TalentoTech-Ecommerce" className='underline'>www.GuardianShop.com</Link></li>
           </ol>
         </div>
       </div>

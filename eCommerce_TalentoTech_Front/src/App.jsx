@@ -9,6 +9,7 @@ import Products from "./pages/services/Products"
 import Contact from "./components/Contact"
 import ProductDetails from "./pages/services/ProductDetails"
 import ChangePassword from "./pages/auth/ChangePassword"
+import Cart from "./pages/cart/Cart"
 
 function App() {
   
@@ -25,6 +26,7 @@ function App() {
          <Route index path="/products" element={<Products/>} />
          <Route index path="/contactForm" element={<Contact/>} />
          <Route index path="/productDetails/:id" element={<ProductDetails/>} />
+         <Route index path="/cart" element={<Cart/>} />
          
 
       </Route>
