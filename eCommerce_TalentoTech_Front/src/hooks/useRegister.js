@@ -1,23 +1,19 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { Global } from '../helpers/Global';
 
 const useRegister = () => {
-    const navigate = useNavigate();
-    
     const [formData, setFormData] = useState({
+        userName: '',
         name: '',
         lastName: '',
         email: '',
-        userName: '',
-        status: 1,
         newPassword: '',
         confirmPassword: '',
-        createUser: 'REGISTER',
     });
-    
     const [message, setMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
     const [passwordsMatch, setPasswordsMatch] = useState(true);
 
     const handleInputChange = (e) => {
@@ -26,26 +22,26 @@ const useRegister = () => {
     };
 
     const validatePasswords = () => {
-        setPasswordsMatch(formData.newPassword === formData.confirmPassword);
+        const match = formData.newPassword === formData.confirmPassword;
+        setPasswordsMatch(match);
     };
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
+    const handleRegister = async () => {
         if (!passwordsMatch) {
             setMessage('Passwords do not match!');
+            console.warn('Attempted to register with non-matching passwords.');
             return;
         }
-    
+
         try {
             const userObject = {
+                userName: formData.userName,
                 name: formData.name,
                 lastName: formData.lastName,
-                userName: formData.userName,
                 email: formData.email,
                 password: formData.newPassword,
-                status: formData.status,
-                createUser: formData.createUser,
-            };    
+                status: 1,
+            };
 
             const response = await axios.post(Global.url + "auth/register", userObject, {
                 headers: {
@@ -53,20 +49,25 @@ const useRegister = () => {
                 },
             });
             
-            setMessage(response.data.message || 'Registration successful!');
-            navigate('/');
+            setSuccessMessage(response.data.message || 'Registration successful!');
+            setErrorMessage(null);
         } catch (error) {
-            setMessage(error.response?.data?.message || 'An error occurred during registration');
+            console.error('Error during registration:', error); // Log para ver el error completo
+            setErrorMessage(error.response?.data?.message || 'Registration failed. Please try again.');
+            setSuccessMessage(null);
+            throw new Error(error.response?.data?.message || 'Registration failed'); // Lanza error
         }
     };
-    
+
     return {
         formData,
         message,
         passwordsMatch,
         handleInputChange,
         validatePasswords,
-        handleRegister
+        handleRegister,
+        successMessage,
+        errorMessage,
     };
 };
 

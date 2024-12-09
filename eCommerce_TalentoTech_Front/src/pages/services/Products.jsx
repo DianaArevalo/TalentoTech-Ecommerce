@@ -10,39 +10,35 @@ const Products = () => {
 
   const [selectedSizes, setSelectedSizes] = useState({});
 
-  // Manejar el cambio de selección de talla (referencia)
   const handleSizeChange = (serviceId, reference) => {
     setSelectedSizes((prev) => ({
       ...prev,
-      [serviceId]: reference, // Se guarda la referencia seleccionada en vez de una talla
+      [serviceId]: reference,
     }));
   };
 
-  // Manejar la adición al carrito
   const handleAddToCart = (service) => {
     const selectedReference = selectedSizes[service.id];
     if (!selectedReference) {
       alert('Por favor, selecciona una talla antes de agregar al carrito.');
       return;
     }
-  
-    // Encontrar el producto derivado que corresponde a la referencia seleccionada
+
     const selectedProduct = service.derivedProducts.find(
       (product) => product.reference === selectedReference
     );
-  
+
     if (!selectedProduct) {
       alert('Producto derivado no encontrado.');
       return;
     }
-  
-    // Crear el objeto que se pasará a addToCart
+
     const productToCart = {
       ...service,
-      inventoryId: selectedProduct.id, // Usar el ID del producto derivado como inventoryId
-      selectedReference, // Incluir la referencia seleccionada
+      inventoryId: selectedProduct.id,
+      selectedReference,
     };
-  
+
     addToCart(productToCart);
   };
 
@@ -75,7 +71,7 @@ const Products = () => {
             </p>
             <div className="ml-2">
               <label htmlFor={`size-select-${service.id}`} className="block font-medium mb-1">
-                Seleccionar talla:
+                {service.categoryId === 3 ? 'Seleccionar Almacenamiento:' : 'Seleccionar talla:'}
               </label>
               <select
                 id={`size-select-${service.id}`}
@@ -83,8 +79,7 @@ const Products = () => {
                 value={selectedSizes[service.id] || ''}
                 onChange={(e) => handleSizeChange(service.id, e.target.value)}
               >
-                <option value="">Selecciona una talla</option>
-                {/* Asegúrate de que los derivados estén correctamente asignados */}
+                <option value="">Selecciona una opción</option>
                 {service.derivedProducts && service.derivedProducts.length > 0 ? (
                   service.derivedProducts.map((derivative) => (
                     <option key={derivative.id} value={derivative.reference}>
@@ -92,7 +87,7 @@ const Products = () => {
                     </option>
                   ))
                 ) : (
-                  <option value="" disabled>No hay tallas disponibles</option>
+                  <option value="" disabled>No hay disponibles</option>
                 )}
               </select>
             </div>

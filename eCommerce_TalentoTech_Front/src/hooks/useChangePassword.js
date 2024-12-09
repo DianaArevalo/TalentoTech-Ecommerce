@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Global } from '../helpers/Global';
 
 const useChangePassword = () => {
-    const navigate = useNavigate(); // Para la navegación
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
         newPassword: '',
@@ -33,6 +33,7 @@ const useChangePassword = () => {
             setMessage(error.response?.data?.message || 'Email not found');
         }
     };
+
     const changePassword = async () => {
         if (!passwordsMatch) {
             setMessage('Passwords do not match!');
@@ -47,7 +48,11 @@ const useChangePassword = () => {
             setMessage(response.data.message || 'Password changed successfully!');
             navigate('/login');
         } catch (error) {
-            setMessage(error.response?.data?.message || 'An error occurred');
+            if (error.response?.status === 401) {
+                setMessage('The token has expired. Please request a new password reset link.');
+            } else {
+                setMessage(error.response?.data?.message || 'An error occurred');
+            }
         }
     };
 
@@ -55,6 +60,7 @@ const useChangePassword = () => {
         formData,
         message,
         passwordsMatch,
+        setMessage,
         handleInputChange,
         validatePasswords,
         sendResetEmail,

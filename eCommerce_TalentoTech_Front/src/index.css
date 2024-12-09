@@ -36,6 +36,15 @@
     .selected-primary {
         @apply text-primary mb-2 p-1 md:mb-5 mr-2 bg-fourty bg-opacity-50 w-[193px] h-[43px] md:w-[360px] md:h-[48px] rounded-md
     }
+    
+    .icon-black {
+        color: black !important; /* Asegura que este estilo prevalezca */
+      }
+    
+      .icon-red {
+        color: #ef4444 !important; /* Usa Tailwind o un color personalizado */
+      }
+      
 }
 
 /* css puro */
