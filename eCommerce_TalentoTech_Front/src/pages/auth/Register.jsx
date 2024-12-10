@@ -1,145 +1,125 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import bgPromo from '../../assets/bgPromo.svg';
-import useInventory from '../../hooks/useInventory.js';
-import useCart from '../../hooks/useCart.js';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import { Link} from 'react-router-dom'
+import useRegister from '../../hooks/useRegister';
 
-const Products = () => {
-  const { services, error } = useInventory();
-  const { addToCart, cartItems } = useCart(); // Importa cartItems para verificar si el item ya está en el carrito
 
-  const [selectedSizes, setSelectedSizes] = useState({});
-  const [modalMessage, setModalMessage] = useState('');
-  const [showModal, setShowModal] = useState(false);
-
-  const handleSizeChange = (serviceId, reference) => {
-    setSelectedSizes((prev) => ({
-      ...prev,
-      [serviceId]: reference,
-    }));
-  };
-
-  const handleAddToCart = (service) => {
-    const selectedReference = selectedSizes[service.id];
-    if (!selectedReference) {
-      toast.error('Por favor, selecciona una talla antes de agregar al carrito.');
-      return;
-    }
-
-    const selectedProduct = service.derivedProducts.find(
-      (product) => product.reference === selectedReference
-    );
-
-    if (!selectedProduct) {
-      toast.error('Producto derivado no encontrado.');
-      return;
-    }
-
-    const productToCart = {
-      ...service,
-      inventoryId: selectedProduct.id,
-      selectedReference,
-    };
-
-    // Verifica si el producto ya está en el carrito
-    const isProductInCart = cartItems.some(item => item.inventoryId === productToCart.inventoryId);
-    
-    if (isProductInCart) {
-      toast.info('El producto ya está en el carrito.');
-      setModalMessage('Este item ya está en el carrito.');
-    } else {
-      toast.success('Producto agregado al carrito.');
-      setModalMessage('Item agregado al carrito correctamente.');
-      addToCart(productToCart);
-    }
-
-    setShowModal(true); // Mostrar el modal después de agregar al carrito
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-  };
+const Register = () => {
+    const {
+        formData,
+        message,
+        passwordsMatch,
+        handleInputChange,
+        validatePasswords,
+        handleRegister,
+        successMessage,
+        errorMessage,
+    } = useRegister();
 
   return (
-    <div className="flex-wrap md:flex-row lg:flex-wrap anyBox justify-center md:justify-start md:place-content-start hidden md:flex">
-      <div className="w-[330px] h-[619px] lg:w-[483px] lg:h-[684px] justify-start place-content-start mr-5">
-        <div
-          className="bg-fourty w-[330px] h-[619px] lg:w-[425px] lg:h-[621px] md:ml-5 lg:ml-10"
-          style={{ backgroundImage: `url(${bgPromo})` }}
-        >
-          <h1 className="text-5xl md:text-7xl p-4 mb-20">
-            Esta es la promo numero uno de <span className="font-extrabold italic">hoy</span>.
-          </h1>
+    <div>
+        <div className='container mx-auto mt-5 md:justify-center xl:top-0 md:top-2 sm:top-10 m-8 anyBox'>
+     <form  onSubmit={handleRegister} className='container md:w-[518px] md:h-[684px] w-[306px] h-[464px] bg-fourty shadow-2xl rounded-sm text-sm md:text-xl anyBox'>
+     
+      <div 
+      onSubmit={handleRegister}
+      className='anyBox flex-row w-[193px] h-[252px] mx-10 md:ml-18 p-5'
+      > 
+      {/* <input type="text" placeholder='rol' className='selected-primary'/>      */}
 
-          <Link to="/" className="p-4 underline">
-            Explora más...
-          </Link>
-        </div>
+      <input 
+      type="text"
+      name="userName"
+      placeholder="Username"
+      value={formData.userName}
+      onChange={handleInputChange}
+      className='input-primary'
+      required
+      
+      
+      />
+
+      <input  
+           
+      type="text"
+      name="name"
+      placeholder="First Name"
+      value={formData.name}
+      onChange={handleInputChange}
+      className='input-primary'
+      required
+      />
+
+      <input 
+       type="text"
+       name="lastName"
+       placeholder="Last Name"
+       value={formData.lastName}
+       onChange={handleInputChange}
+       className='input-primary'
+       required      
+      />
+
+
+      <input 
+        type="email"
+        name="email"
+        placeholder="Email"
+        value={formData.email}
+        onChange={handleInputChange}
+        className='input-primary'
+        required
+     
+     
+      />
+
+      <input 
+       type="password"
+       name="newPassword"
+       placeholder="Password"
+       value={formData.newPassword}
+       onChange={handleInputChange}
+       onBlur={validatePasswords}
+       className='input-primary'
+       required
+      />
+
+<input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+          onChange={handleInputChange}
+          onBlur={validatePasswords}
+            className='input-primary'
+                    required
+                />
+                 {!passwordsMatch && <p style={{ color: 'red' }}>Passwords do not match!</p>}
+
+      <button 
+        type='submit' 
+        className='w-[193px] h-[43px] md:w-[360px] md:h-[48px] btn-primary mb-5'
+            >
+              {successMessage ? 'Enviado' : 'Enviar'}
+      </button>
+
+      {/* Mensajes de error y éxito */}
+      {errorMessage && <div className="text-red-500">{errorMessage}</div>}
+      {successMessage && <div className="text-green-500">{successMessage}</div>}
+
       </div>
 
-      <div className="w-[330px] md:w-[530px] lg:w-[957px] h-full flex flex-wrap justify-center place-content-start p-1">
-        {error && <p>{error}</p>}
 
-        {services.map((service) => (
-          <div key={service.id} className="bg-fourty/50 w-[249px] h-[550px] m-1 justify-center">
-            <img src={service.imageUrl} alt="" width="249px" height="250px" />
-            <h1 className="font-bold ml-2">{service.name}</h1>
-            <p className="ml-2 p-1 font-semibold">
-              Precio: ${service.salePrice ? service.salePrice : 'No disponible'}
-            </p>
-            <div className="ml-2">
-              <label htmlFor={`size-select-${service.id}`} className="block font-medium mb-1">
-                Seleccionar talla:
-              </label>
-              <select
-                id={`size-select-${service.id}`}
-                className="block w-full p-2 border rounded"
-                value={selectedSizes[service.id] || ''}
-                onChange={(e) => handleSizeChange(service.id, e.target.value)}
-              >
-                <option value="">Selecciona una talla</option>
-                {service.derivedProducts && service.derivedProducts.length > 0 ? (
-                  service.derivedProducts.map((derivative) => (
-                    <option key={derivative.id} value={derivative.reference}>
-                      {derivative.reference}
-                    </option>
-                  ))
-                ) : (
-                  <option value="" disabled>No hay tallas disponibles</option>
-                )}
-              </select>
-            </div>
-            <div className="text-sm flex flex-wrap space-x-1 p-1">
-              <Link className="btn-primary p-2 mb-5" to={`/productDetails/${service.id}`}>
-                Detalles...
-              </Link>
-              <button
-                className="btn btn-primary p-2 mb-5"
-                onClick={() => handleAddToCart(service)}
-              >
-                Agregar al carrito
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+      <footer className='p-2 mx-10 bottom-0'>
+      {/* <Link to="/" className='btn-secondary mb-5 place-content-center items-center'>Ya tengo una cuenta</Link>  */}
+                    
+      </footer>        
 
-      {/* Contenedor para las notificaciones */}
-      <ToastContainer />
-
-      {/* Modal */}
-      {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeModal}>&times;</span>
-            <p>{modalMessage}</p>
-          </div>
-        </div>
-      )}
+     </form>
+     {message && <p>{message}</p>}
+  
+    
     </div>
-  );
-};
+    </div>
+  )
+}
 
-export default Products;
+export default Register

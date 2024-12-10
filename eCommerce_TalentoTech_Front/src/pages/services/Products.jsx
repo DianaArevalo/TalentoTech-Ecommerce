@@ -1,13 +1,11 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import bgPromo from '../../assets/bgPromo.svg';
-import useInventory from '../../hooks/useInventory.js';
-import useCart from '../../hooks/useCart.js';
+import { useState } from "react";
+import bgPromo from "../../assets/bgPromo.svg";
+import useInventory from "../../hooks/useInventory.js";
+import useCart from "../../hooks/useCart.js";
 
 const Products = () => {
   const { services, error } = useInventory();
   const { addToCart } = useCart();
-
   const [selectedSizes, setSelectedSizes] = useState({});
 
   const handleSizeChange = (serviceId, reference) => {
@@ -20,7 +18,7 @@ const Products = () => {
   const handleAddToCart = (service) => {
     const selectedReference = selectedSizes[service.id];
     if (!selectedReference) {
-      alert('Por favor, selecciona una talla antes de agregar al carrito.');
+      alert("Por favor, selecciona una talla antes de agregar al carrito.");
       return;
     }
 
@@ -29,7 +27,7 @@ const Products = () => {
     );
 
     if (!selectedProduct) {
-      alert('Producto derivado no encontrado.');
+      alert("Producto derivado no encontrado.");
       return;
     }
 
@@ -43,60 +41,74 @@ const Products = () => {
   };
 
   return (
-    <div className="flex-wrap md:flex-row lg:flex-wrap anyBox justify-center md:justify-start md:place-content-start hidden md:flex">
-      <div className="w-[330px] h-[619px] lg:w-[483px] lg:h-[684px] justify-start place-content-start mr-5">
-        <div
-          className="bg-fourty w-[330px] h-[619px] lg:w-[425px] lg:h-[621px] md:ml-5 lg:ml-10"
-          style={{ backgroundImage: `url(${bgPromo})` }}
-        >
-          <h1 className="text-5xl md:text-7xl p-4 mb-20">
-            Esta es la promo numero uno de <span className="font-extrabold italic">hoy</span>.
-          </h1>
-
-          <Link to="/" className="p-4 underline">
-            Explora más...
-          </Link>
-        </div>
+    <div className="flex flex-col items-center">
+      {/* Promo banner */}
+      <div
+        className="bg-fourty flex items-center justify-center mb-4 w-full max-w-screen-lg h-64"
+        style={{
+          backgroundImage: `url(${bgPromo})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <h1 className="text-2xl md:text-4xl lg:text-5xl text-center">
+          Esta es la promo de <span className="font-extrabold italic">hoy</span>.
+        </h1>
       </div>
 
-      <div className="w-[330px] md:w-[530px] lg:w-[957px] h-full flex flex-wrap justify-center place-content-start p-1">
+      {/* Product grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full max-w-screen-lg px-2 sm:px-4">
         {error && <p>{error}</p>}
 
         {services.map((service) => (
-          <div key={service.id} className="bg-fourty/50 w-[249px] h-[550px] m-1 justify-center">
-            <img src={service.imageUrl} alt="" width="249px" height="250px" />
-            <h1 className="font-bold ml-2">{service.name}</h1>
-            <p className="ml-2 p-1 font-semibold">
-              Precio: ${service.salePrice ? service.salePrice : 'No disponible'}
+          <div
+            key={service.id}
+            className="bg-fourty/50 p-4 flex flex-col items-center shadow rounded-lg"
+          >
+            <img
+              src={service.imageUrl}
+              alt={service.name}
+              className="w-full h-49 object-cover mb-4 rounded"
+            />
+            <h1 className="font-bold text-center text-sm sm:text-base md:text-lg">
+              {service.name}
+            </h1>
+            <p className="font-semibold text-center text-xs sm:text-sm md:text-base">
+              Precio: ${service.salePrice ? service.salePrice : "No disponible"}
             </p>
-            <div className="ml-2">
-              <label htmlFor={`size-select-${service.id}`} className="block font-medium mb-1">
-                {service.categoryId === 3 ? 'Seleccionar Almacenamiento:' : 'Seleccionar talla:'}
+            <div className="w-full mt-2">
+              <label
+                htmlFor={`size-select-${service.id}`}
+                className="block font-medium mb-1 text-xs sm:text-sm"
+              >
+                {service.categoryId === 3
+                  ? "Seleccionar Almacenamiento:"
+                  : "Seleccionar talla:"}
               </label>
               <select
                 id={`size-select-${service.id}`}
-                className="block w-full p-2 border rounded"
-                value={selectedSizes[service.id] || ''}
+                className="w-full p-2 border rounded text-xs sm:text-sm"
+                value={selectedSizes[service.id] || ""}
                 onChange={(e) => handleSizeChange(service.id, e.target.value)}
               >
                 <option value="">Selecciona una opción</option>
-                {service.derivedProducts && service.derivedProducts.length > 0 ? (
+                {service.derivedProducts &&
+                service.derivedProducts.length > 0 ? (
                   service.derivedProducts.map((derivative) => (
                     <option key={derivative.id} value={derivative.reference}>
                       {derivative.reference}
                     </option>
                   ))
                 ) : (
-                  <option value="" disabled>No hay disponibles</option>
+                  <option value="" disabled>
+                    No hay disponibles
+                  </option>
                 )}
               </select>
             </div>
-            <div className="text-sm flex flex-wrap space-x-1 p-1">
-              <Link className="btn-primary p-2 mb-5" to={`/productDetails/${service.id}`}>
-                Detalles...
-              </Link>
+            <div className="mt-4 w-full">
               <button
-                className="btn btn-primary p-2 mb-5"
+                className="btn btn-primary p-2 w-full whitespace-nowrap text-xs sm:text-sm"
                 onClick={() => handleAddToCart(service)}
               >
                 Agregar al carrito
