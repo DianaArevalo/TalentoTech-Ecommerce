@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
 import bgPromo from '../../assets/bgPromo.svg'
-import useInventory from '../../hooks/useInventory.js';
+import useProducts from '../../hooks/useProducts.js';
 import useCart from '../../hooks/useCart.js';
 import { useParams } from 'react-router-dom';
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const { services, error } = useInventory();
+  const { services, error } = useProducts();
   const { addToCart } = useCart();
 
   const product = services.find((service) => service.id === parseInt(id, 10));

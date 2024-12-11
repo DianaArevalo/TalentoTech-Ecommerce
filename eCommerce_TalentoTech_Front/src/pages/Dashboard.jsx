@@ -1,4 +1,3 @@
-import React from 'react'
 import CardHome from '../components/Cards/CardHome'
 import Average from '../components/Cards/Average'
 import Maps from '../components/Cards/Maps'

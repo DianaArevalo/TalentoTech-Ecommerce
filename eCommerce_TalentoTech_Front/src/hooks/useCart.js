@@ -1,13 +1,16 @@
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // Importación corregida
-import { Global } from "../helpers/Global";
+import { useDispatch, useSelector } from 'react-redux';
+import { updateCart } from '../redux/cartSlice'; // Asegúrate de que updateCart esté correctamente definido
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
+import { Global } from '../helpers/Global';
+import { jwtDecode } from 'jwt-decode';
 
 const useCart = () => {
-  const [cartItems, setCartItems] = useState([]);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const cartItems = useSelector((state) => state.cart.items);
+  const [error, setError] = useState(null);
 
   const isTokenValid = (token) => {
     try {
@@ -17,12 +20,7 @@ const useCart = () => {
 
       const decodedToken = jwtDecode(token);
       const currentTime = Date.now() / 1000;
-      if (decodedToken.exp < currentTime) {
-        console.error("Token ha expirado");
-        return false;
-      }
-
-      return true;
+      return decodedToken.exp >= currentTime;
     } catch (error) {
       console.error("Error al decodificar el token:", error);
       return false;
@@ -32,7 +30,6 @@ const useCart = () => {
   const checkIfUserHasCart = async (userId) => {
     const token = localStorage.getItem("authToken");
     if (!token || !isTokenValid(token)) {
-      navigate("/login");
       console.error("Token no disponible o inválido");
       return 0;
     }
@@ -58,9 +55,7 @@ const useCart = () => {
       const innerData = parsedResponse?.data;
       const innerParsedData = JSON.parse(innerData);
 
-      const cartId = innerParsedData.cartId || 0;
-      return cartId;
-
+      return innerParsedData.cartId || 0;
     } catch (error) {
       console.error("Error en checkIfUserHasCart:", error);
       setError("Error al verificar el carrito");
@@ -68,7 +63,7 @@ const useCart = () => {
     }
   };
 
-  const addToCart = async (product) => {
+  const addToCartHandler = async (product) => {
     const token = localStorage.getItem("authToken");
 
     if (!token || !isTokenValid(token)) {
@@ -123,7 +118,7 @@ const useCart = () => {
       if (base64Data && base64Data.length % 4 === 0) {
         const jsonString = atob(base64Data);
         const data = JSON.parse(jsonString);
-        setCartItems(data.cartItems);
+        dispatch(updateCart(data.cartItems)); // Actualiza el estado global con Redux
       } else {
         console.error("Invalid Base64 string:", base64Data);
         setError("Invalid data format from server");
@@ -134,7 +129,7 @@ const useCart = () => {
     }
   };
 
-  const validateCart = async () => {
+  const validateCart = async (currentPage = 1) => {  // Acepta currentPage como argumento
     const token = localStorage.getItem("authToken");
   
     if (!token || !isTokenValid(token)) {
@@ -149,7 +144,6 @@ const useCart = () => {
       const usernamePayload = { id: userId };
       const base64UsernamePayload = btoa(JSON.stringify(usernamePayload));
   
-      // Obtener el nombre del usuario
       const userNameResponse = await fetch(Global.url + "users/list/id", {
         method: "POST",
         headers: {
@@ -167,7 +161,6 @@ const useCart = () => {
       const userNameData = JSON.parse(atob(userNameBase64Data));
       const { userName } = userNameData.data;
   
-      // Verificar el carrito
       const cartId = await checkIfUserHasCart(userId);
       if (cartId === 0) {
         console.error("No se encontró el carrito del usuario.");
@@ -200,18 +193,20 @@ const useCart = () => {
       const data = JSON.parse(jsonString);
   
       if (data.data === true) {
-        const payload = { page: 1 };
-        const base64Payload = btoa(JSON.stringify(payload));
+        const payload = {
+          cartId,
+          page: currentPage,  // Usa currentPage
+          size: 10,
+        };
   
-        const orderItemsResponse = await fetch(Global.url + "order-items/list/all", {
+        const orderItemsResponse = await fetch(Global.url + "order-items/list/cart", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-           body: base64Payload,
+          body: JSON.stringify(payload),
         });
-  
         if (!orderItemsResponse.ok) {
           throw new Error(`Error en la respuesta del servidor: ${orderItemsResponse.status}`);
         }
@@ -219,13 +214,12 @@ const useCart = () => {
         const orderItemsBase64Data = await orderItemsResponse.text();
         const jsonString = atob(orderItemsBase64Data);
         const dataString = JSON.parse(jsonString);
-        if (dataString.data && dataString.data.content) {
-          const items = dataString.data.content; 
-          setCartItems(items); 
-          return { success: true, items }; 
+        if (dataString.data) {
+          const items = dataString.data;
+          dispatch(updateCart(items)); // Actualiza el estado global con Redux
+          return { success: true, items };
         }
-        // return dataString;
-      } 
+      }
     } catch (error) {
       console.error("Error en validateCart:", error);
       setError("Error al validar el carrito");
@@ -270,17 +264,17 @@ const useCart = () => {
         const jsonString = atob(base64Data);
         const updatedItem = JSON.parse(jsonString);
   
-        // Actualiza el estado de cartItems asegurando que provoque una re-renderización
-        setCartItems((prevItems) => {
-          const updatedItems = prevItems.map((cartItem) =>
-            cartItem.id === updatedItem.id
-              ? { ...cartItem, quantity: updatedItem.quantity }
-              : cartItem
-          );
+        // Calcula el nuevo estado del carrito
+        const updatedItems = cartItems.map((cartItem) =>
+          cartItem.id === updatedItem.id
+            ? { ...cartItem, quantity: updatedItem.quantity }
+            : cartItem
+        ).filter((cartItem) => cartItem.quantity > 0);
+
+        console.log('cartItems:', cartItems);
   
-          // Si la cantidad es 0, eliminamos el ítem del carrito
-          return updatedItems.filter((cartItem) => cartItem.quantity > 0);
-        });
+        // Despacha la acción con el nuevo estado
+        dispatch(updateCart(updatedItems));
       } else {
         console.error("Invalid Base64 string:", base64Data);
         setError("Invalid data format from server");
@@ -290,15 +284,14 @@ const useCart = () => {
       setError("Error al actualizar la cantidad del ítem");
     }
   };
-  
 
   return {
     cartItems,
-    addToCart,
+    addToCart: addToCartHandler,
     validateCart,
     updateItemQuantity,
     error,
-  };  
+  };
 };
 
 export default useCart;

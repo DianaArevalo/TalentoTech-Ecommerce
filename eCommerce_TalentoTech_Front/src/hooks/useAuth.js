@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { login, logout } from '../redux/authSlice'; // Ajusta la ruta según tu estructura
 import { Global } from '../helpers/Global';
 
 const useAuth = () => {
@@ -9,15 +11,15 @@ const useAuth = () => {
         password: ''
     });
     const [message, setMessage] = useState('');
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         if (token) {
-            setIsAuthenticated(true);
+            dispatch(login()); 
         }
-    }, []);
+    }, [dispatch]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -33,8 +35,8 @@ const useAuth = () => {
                     password: formData.password,
                 });
                 localStorage.setItem('authToken', response.data.jwt);
-                setIsAuthenticated(true);
-                navigate('/products');
+                dispatch(login()); // Actualizar el estado de Redux
+                navigate('/products', { state: { showSuccess: true } });
             } else if (mode === 'register') {
                 response = await axios.post(Global.url + "auth/register", {
                     ...formData,
@@ -47,9 +49,9 @@ const useAuth = () => {
         }
     };
 
-    const logout = () => {
+    const handleLogout = () => {
         localStorage.removeItem('authToken');
-        setIsAuthenticated(false);
+        dispatch(logout()); // Actualizar el estado de Redux
         navigate('/login');
     };
 
@@ -58,8 +60,7 @@ const useAuth = () => {
         message,
         handleInputChange,
         handleAuth,
-        isAuthenticated,
-        logout,
+        handleLogout,
     ];
 };
 

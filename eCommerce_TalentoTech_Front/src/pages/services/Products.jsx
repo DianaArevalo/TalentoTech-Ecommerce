@@ -1,12 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import bgPromo from "../../assets/bgPromo.svg";
-import useInventory from "../../hooks/useInventory.js";
-import useCart from "../../hooks/useCart.js";
+import useProducts from "../../hooks/useProducts";
+import useCart from "../../hooks/useCart";
 
 const Products = () => {
-  const { services, error } = useInventory();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { services, error, totalPages, currentPage, setCurrentPage } = useProducts();
   const { addToCart } = useCart();
   const [selectedSizes, setSelectedSizes] = useState({});
+
+  useEffect(() => {
+    if (location.state?.showSuccess) {
+      toast.success("Login successful! Welcome to the products page.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.state, navigate, location.pathname]);
 
   const handleSizeChange = (serviceId, reference) => {
     setSelectedSizes((prev) => ({
@@ -38,11 +53,19 @@ const Products = () => {
     };
 
     addToCart(productToCart);
+    toast.success("Product added to the cart successfully!", {
+      position: "top-center",
+      autoClose: 3000,
+    });
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
   };
 
   return (
-    <div className="flex flex-col items-center">
-      {/* Promo banner */}
+    <div className="flex flex-col items-center w-full">
+      <ToastContainer />
       <div
         className="bg-fourty flex items-center justify-center mb-4 w-full max-w-screen-lg h-64"
         style={{
@@ -56,9 +79,8 @@ const Products = () => {
         </h1>
       </div>
 
-      {/* Product grid */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full max-w-screen-lg px-2 sm:px-4">
-        {error && <p>{error}</p>}
+        {error && <p className="text-red-500">{error}</p>}
 
         {services.map((service) => (
           <div
@@ -74,7 +96,9 @@ const Products = () => {
               {service.name}
             </h1>
             <p className="font-semibold text-center text-xs sm:text-sm md:text-base">
-              Precio: ${service.salePrice ? service.salePrice : "No disponible"}
+              {service.categoryId === 3
+                ? "Precio: Ver en Carrito"
+                : `Precio: $${service.salePrice ? service.salePrice : "No disponible"}`}
             </p>
             <div className="w-full mt-2">
               <label
@@ -108,7 +132,7 @@ const Products = () => {
             </div>
             <div className="mt-4 w-full">
               <button
-                className="btn btn-primary p-2 w-full whitespace-nowrap text-xs sm:text-sm"
+                className="btn btn-primary p-2 w-full text-xs sm:text-sm truncate"
                 onClick={() => handleAddToCart(service)}
               >
                 Agregar al carrito
@@ -117,6 +141,24 @@ const Products = () => {
           </div>
         ))}
       </div>
+
+      {/* Paginación */}
+      {totalPages > 0 && (
+        <div className={`bg-fourty/80 rounded-md p-2 flex items-center justify-center mt-5`}>
+          <button className="btn-primary font-bold mx-1 px-3 py-1">
+            Pages
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={`mx-1 px-3 py-1 rounded btn-primary ${page === currentPage ? 'active' : ''}`}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
