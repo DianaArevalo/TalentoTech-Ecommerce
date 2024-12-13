@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { updateCart } from '../redux/cartSlice'; // Asegúrate de que updateCart esté correctamente definido
+import { updateCart } from '../redux/cartSlice';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
@@ -118,7 +118,7 @@ const useCart = () => {
       if (base64Data && base64Data.length % 4 === 0) {
         const jsonString = atob(base64Data);
         const data = JSON.parse(jsonString);
-        dispatch(updateCart(data.cartItems)); // Actualiza el estado global con Redux
+        dispatch(updateCart(data.cartItems));
       } else {
         console.error("Invalid Base64 string:", base64Data);
         setError("Invalid data format from server");
@@ -129,7 +129,7 @@ const useCart = () => {
     }
   };
 
-  const validateCart = async (currentPage = 1) => {  // Acepta currentPage como argumento
+  const validateCart = async (currentPage = 1) => { 
     const token = localStorage.getItem("authToken");
   
     if (!token || !isTokenValid(token)) {
@@ -195,7 +195,7 @@ const useCart = () => {
       if (data.data === true) {
         const payload = {
           cartId,
-          page: currentPage,  // Usa currentPage
+          page: currentPage,
           size: 10,
         };
   
@@ -216,7 +216,7 @@ const useCart = () => {
         const dataString = JSON.parse(jsonString);
         if (dataString.data) {
           const items = dataString.data;
-          dispatch(updateCart(items)); // Actualiza el estado global con Redux
+          dispatch(updateCart(items));
           return { success: true, items };
         }
       }
@@ -264,17 +264,14 @@ const useCart = () => {
         const jsonString = atob(base64Data);
         const updatedItem = JSON.parse(jsonString);
   
-        // Calcula el nuevo estado del carrito
-        const updatedItems = cartItems.map((cartItem) =>
-          cartItem.id === updatedItem.id
-            ? { ...cartItem, quantity: updatedItem.quantity }
+        const updatedItems = cartItems.content.map((cartItem) =>
+          cartItem.id === updatedItem.data.id
+            ? { ...cartItem, quantity: updatedItem.data.quantity }
             : cartItem
         ).filter((cartItem) => cartItem.quantity > 0);
-
-        console.log('cartItems:', cartItems);
-  
-        // Despacha la acción con el nuevo estado
-        dispatch(updateCart(updatedItems));
+        
+        
+        dispatch(updateCart({ ...cartItems, content: updatedItems }));
       } else {
         console.error("Invalid Base64 string:", base64Data);
         setError("Invalid data format from server");
