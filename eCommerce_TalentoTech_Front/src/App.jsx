@@ -12,6 +12,7 @@ import ChangePassword from "./pages/auth/ChangePassword";
 import Cart from "./pages/cart/Cart";
 import useAuthInitializer from "./hooks/useAuthInitializer";
 import PrivateRoute from './components/routes/PrivateRoute';
+import OrderDetails from "./pages/cart/OrderDetails";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         {/* Rutas que requieren autenticación */}
         <Route element={<PrivateRoute />}>
           <Route path="/orders" element={<Orders />} />
+          <Route path="/orderDetails" element={<OrderDetails />} />
           <Route path="/cart" element={<Cart />} />
         </Route>
 
